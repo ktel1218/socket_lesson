@@ -16,7 +16,11 @@ def open_connection(my_socket):
             if s == my_socket:
                 msg = s.recv(1024)
                 if msg:
-                    print format(msg)
+                    if "/quit" in msg:
+                        print"Disconnecting"
+                        running = False
+                    else:
+                        print format(msg)
                 else:
                     print "Disconnected from server!"
                     running = False
