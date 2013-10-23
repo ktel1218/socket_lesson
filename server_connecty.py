@@ -30,7 +30,7 @@ def open_connection(my_socket):
 
 def main():
     my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    my_socket.connect(("localhost", 5555))
+    my_socket.connect(("10.1.10.100", 5555))
 
     open_connection(my_socket)
 

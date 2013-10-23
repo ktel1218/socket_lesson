@@ -4,7 +4,7 @@ import sys
 
 class Server:
     def __init__(self):
-        self.host    = ''
+        self.host    = ""
         self.port    = 5555
         self.server  = None
         self.inputs  = []
