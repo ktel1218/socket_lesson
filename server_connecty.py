@@ -1,38 +1,35 @@
-import socket
-import sys
-import select
+import socket, sys, select
 
-my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-my_socket.connect(("localhost", 5555))
+def format(message):
+    if "::" in message:
+        message = message.split("::", 1)
+        new_message = "[%s]" %message[0] + " " + message[1]
+        return new_message
+    else: 
+        return message
 
-running = True
-while running:
-    inputready, outputready, exceptready = select.select([my_socket, sys.stdin], [], [])
-    if inputready == [my_socket]:
+def open_connection(my_socket):
+    running = True
+    while running:
+        inputready, outputready, exceptready = select.select([my_socket, sys.stdin], [], [])
         for s in inputready:
-            msg = s.recv(1024)
-            if msg:
-                print msg
-            else:
-                print "Disconnected from server!"
-                running = False
-    elif inputready == [sys.stdin]:
-        input_from_user = sys.stdin.readline()
-        my_socket.sendall(input_from_user)
+            if s == my_socket:
+                msg = s.recv(1024)
+                if msg:
+                    print format(msg)
+                else:
+                    print "Disconnected from server!"
+                    running = False
+            elif s == sys.stdin:
+                input_from_user = sys.stdin.readline()
+                my_socket.sendall(input_from_user)
 
+def main():
+    my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    my_socket.connect(("localhost", 5555))
 
-# data = my_socket.recv(1024)
+    open_connection(my_socket)
 
-# print "received:\n%s" %data
+    my_socket.close()
 
-# input_from_user = sys.stdin.readline()
-
-# my_socket.sendall(input_from_user)
-
-
-# data2 = my_socket.recv(1024)
-# print "\n%s" %data2
-
-
-my_socket.close()
-
+main()
